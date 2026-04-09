@@ -28,7 +28,7 @@ with tab1:
     with col1:
         data_relatorio = st.date_input("Data", value=date.today())
     with col2:
-        transportadora = st.text_input("Entregador", value="Honorio/Gabriel - Parque mambucaba")
+        transportadora = st.text_input("Entregador", value="")
 
     st.subheader("Adicionar item")
 
