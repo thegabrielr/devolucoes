@@ -108,10 +108,10 @@ with tab1:
 
             page_width = pdf.w - 2 * pdf.l_margin
 
-            col_awb = page_width * 0.18
-            col_cliente = page_width * 0.27
-            col_endereco = page_width * 0.35
-            col_motivo = page_width * 0.20
+            col_awb = page_width * 0.25
+            col_cliente = page_width * 0.25
+            col_endereco = page_width * 0.25
+            col_motivo = page_width * 0.25
 
             pdf.set_font("Arial", "B", 9)
             pdf.set_fill_color(220, 220, 220)
