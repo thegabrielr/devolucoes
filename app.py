@@ -81,7 +81,7 @@ with tab1:
             pdf.add_page()
             
             # Título
-            pdf.set_font("Arial", "B", 14)
+            pdf.set_font("helvetica", "B", 14)
             pdf.cell(0, 10, "RELATÓRIO DE DEVOLUÇÕES", ln=True, align="C")
             pdf.set_font("Arial", "", 10)
             pdf.cell(0, 6, f"Entregador: {transportadora} | Data: {data_relatorio.strftime('%d/%m/%Y')}", ln=True, align="C")
