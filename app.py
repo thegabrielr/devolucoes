@@ -50,30 +50,53 @@ with tab1:
             })
             st.rerun()
 
-    st.subheader(f"Itens ({len(st.session_state.itens)})")
+st.subheader(f"Itens ({len(st.session_state.itens)})")
 
     if not st.session_state.itens:
-        st.info("Nenhum item na lista.")
+        st.info("Nenhum item")
     else:
         for i, item in enumerate(st.session_state.itens):
-            with st.expander(f"[{item['Tipo']}] {item['AWB']} - {item.get('Nome do Cliente','')}"):
-                col_e1, col_e2 = st.columns([3, 1])
-                item["Nome do Cliente"] = col_e1.text_input("Cliente", value=item.get("Nome do Cliente",""), key=f"cli_{i}")
-                item["Tipo"] = col_e2.selectbox("Tipo", ["CARD", "PCT"], index=0 if item["Tipo"]=="CARD" else 1, key=f"tp_{i}")
+            # O título do expander agora se atualiza dinamicamente
+            with st.expander(f"📦 {item.get('Tipo', 'PCT')} | {item.get('AWB', 'S/N')} - {item.get('Nome do Cliente','')}"):
                 
-                item["Endereço"] = st.text_area("Endereço", value=item.get("Endereço",""), key=f"end_{i}")
-                item["Motivo"] = st.selectbox("Motivo", [""] + st.session_state.motivos, 
-                                            index=(st.session_state.motivos.index(item["Motivo"]) + 1) if item["Motivo"] in st.session_state.motivos else 0, 
-                                            key=f"mot_{i}")
+                # --- ADICIONE ESTA LINHA PARA EDITAR O AWB ---
+                item["AWB"] = st.text_input(
+                    "AWB / Código de Rastreio", 
+                    value=item.get("AWB", ""), 
+                    key=f"awb_edit_{i}"
+                )
 
-                if st.button("Remover", key=f"del_{i}"):
+                col_e1, col_e2 = st.columns([3, 1])
+                with col_e1:
+                    item["Nome do Cliente"] = st.text_input(
+                        "Cliente", value=item.get("Nome do Cliente",""), key=f"cli_{i}"
+                    )
+                with col_e2:
+                    # Ajuste para CARD ou PCT
+                    opcoes_tipo = ["CARD", "PCT"]
+                    tipo_atual = item.get("Tipo", "PCT")
+                    idx_tipo = opcoes_tipo.index(tipo_atual) if tipo_atual in opcoes_tipo else 1
+                    item["Tipo"] = st.selectbox("Tipo", opcoes_tipo, index=idx_tipo, key=f"tp_{i}")
+
+                item["Endereço"] = st.text_area(
+                    "Endereço", value=item.get("Endereço",""), key=f"end_{i}"
+                )
+
+                # Motivo
+                motivos_lista = [""] + st.session_state.motivos
+                motivo_atual = item.get("Motivo", "")
+                idx_motivo = motivos_lista.index(motivo_atual) if motivo_atual in motivos_lista else 0
+                
+                item["Motivo"] = st.selectbox(
+                    "Motivo",
+                    motivos_lista,
+                    index=idx_motivo,
+                    key=f"mot_{i}"
+                )
+
+                if st.button("Remover Item", key=f"del_{i}", type="secondary"):
                     st.session_state.itens.pop(i)
                     st.rerun()
-
-    if st.button("Limpar lista"):
-        st.session_state.itens = []
-        st.rerun()
-
     # ==================== GERAR PDF ATUALIZADO ====================
     if st.session_state.itens:
         if st.button("Gerar PDF"):
